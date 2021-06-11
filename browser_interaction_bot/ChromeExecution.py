@@ -78,9 +78,15 @@ class ChromeExecution:
         for log in self.browser.get_log('browser'):
             self.logs.add(log.get('message', ''))
 
+    def __close_browser(self):
+        try:
+            self.browser.close()
+            self.browser.quit()
+        except:
+            pass
+
     def close_tools(self) -> None:
-        self.browser.close()
-        self.browser.quit()
+        self.__close_browser()
         self.dot_file_builder.close()
         self.trace_file.close()
 
