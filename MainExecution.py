@@ -13,5 +13,6 @@ def execute(site: str, db_details: dict, proxy_url: str, output_file_directory: 
         used_function_id_map = LogParser.parse_logs(chrome_execution.logs, data_store.request_url_content_file_map)
         data_store.remove_unused_functions(used_function_id_map)
         data_store.persist_updated_files()
-    except:
+    except Exception as e:
         chrome_execution.close_tools()
+        raise e

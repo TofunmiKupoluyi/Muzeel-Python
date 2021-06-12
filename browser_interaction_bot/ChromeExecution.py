@@ -1,4 +1,4 @@
-from os import makedirs, path
+from os import makedirs, path, getcwd
 from json import dumps
 from seleniumwire import webdriver
 from selenium.webdriver import ChromeOptions
@@ -57,6 +57,7 @@ class ChromeExecution:
         self.chrome_options.add_argument("--no-sandbox")
         self.chrome_options.add_argument("--disable-popup-blocking")
         self.chrome_options.add_argument("--headless")
+        self.chrome_options.add_argument("--user-data-dir={}".format(getcwd()))
 
     def create_directory(self, output_directory: str) -> None:
         if not path.exists(output_directory):
