@@ -56,7 +56,10 @@ class DataStore:
 
             script_content = self.data_map[request_url]["original"]
             self.function_id_map[request_url] = set()
-            esprima.parseModule(script_content, {"range": True, "tolerant": True}, esprima_delegate)
+            try:
+                esprima.parseModule(script_content, {"range": True, "tolerant": True}, esprima_delegate)
+            except:
+                pass
             self.__add_log_statements_to_update_file(request_url, function_start_end_positions)
 
     def __add_log_statements_to_update_file(self, request_url: str, function_start_end_positions: list) -> None:
