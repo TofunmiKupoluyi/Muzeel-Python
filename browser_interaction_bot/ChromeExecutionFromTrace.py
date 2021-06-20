@@ -18,7 +18,10 @@ class ChromeExecutionFromTrace(ChromeExecution):
         for line in self.trace_file.read().split("\n"):
             self.url = BrowserInteractions.open_page(self.browser, self.url)
             BrowserInteractions.scroll_to_top(self.browser)
-            event_trace = json.loads(line)
+            try:
+                event_trace = json.loads(line)
+            except:
+                continue
             for serialized_event in event_trace:
                 event = Event(serialized_event["event"], serialized_event["xpath"])
                 try:
