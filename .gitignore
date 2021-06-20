@@ -5,3 +5,4 @@ error_log*
 fix_error_log.py
 fixed_error_log
 /outputs
+run_test.py

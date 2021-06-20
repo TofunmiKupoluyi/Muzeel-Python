@@ -56,22 +56,22 @@ class ReadProxy:
         # return miss if not cache hit
         if not sql_response:
             print ("--------- CACHE MISS {} -----------".format(requestUrl))
-            flow.response = http.HTTPResponse.make (200,"",{"Content-Type": "text/html"})
+            # flow.response = http.HTTPResponse.make (200,"",{"Content-Type": "text/html"})
             # flow.initiatingUrl = False
             return
         else:
             print ("--------- CACHE HIT {} -----------".format(requestUrl))
             temp_content = None
             if sql_response[1] != None:
-                with open(ctx.options.cacheDirectory + sql_response[1].split(".u")[0]+".m", 'rb') as temp_file:
+                with open(ctx.options.cacheDirectory + "/" + sql_response[1].split(".u")[0]+".m", 'rb') as temp_file:
                     temp_content = temp_file.read()
                     temp_file.close()
             else:
-                with open(ctx.options.cacheDirectory + sql_response[3], 'rb') as temp_file:
+                with open(ctx.options.cacheDirectory + "/" + sql_response[3], 'rb') as temp_file:
                     temp_content = temp_file.read()
                     temp_file.close()
 
-            with open(ctx.options.cacheDirectory + sql_response[0], 'rb') as temp_file:
+            with open(ctx.options.cacheDirectory + "/" + sql_response[0], 'rb') as temp_file:
                 temp_headers = pickle.load(temp_file, encoding='latin1')
 
             code = 200
