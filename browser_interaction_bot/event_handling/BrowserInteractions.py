@@ -1,7 +1,7 @@
 from selenium.webdriver import Chrome
 from selenium.common.exceptions import NoSuchWindowException, UnexpectedAlertPresentException
-from time import sleep
-import psutil
+from time import sleep, time
+from .config import MAX_PAGE_LOAD_TIME, SCROLL_BOTTOM_TIME, SCROLL_TOP_TIME, SCREENSHOT_WAIT_TIME, PAGE_LOAD_BUFFER_TIME, PAGE_RETRY_WAIT_TIME
 
 
 class BrowserInteractions:
@@ -15,7 +15,7 @@ class BrowserInteractions:
         except Exception as e:
             if retry_count < 5:
                 print("Retrying page load, error occurred", e)
-                cls.wait(3)
+                cls.wait(PAGE_RETRY_WAIT_TIME)
                 return cls.open_page(browser, url, retry_count+1)
             else:
                 raise e
@@ -23,15 +23,16 @@ class BrowserInteractions:
 
     @classmethod
     def wait_for_page_load(cls, browser: Chrome) -> None:
+        start_time = time()
         load_state = browser.execute_script("return document.readyState")
-        while load_state != "complete":
+        while load_state != "complete" and time() - start_time < MAX_PAGE_LOAD_TIME:
             load_state = browser.execute_script("return document.readyState")
-        cls.wait(2)
+        cls.wait(PAGE_LOAD_BUFFER_TIME)
 
     @classmethod
     def scroll_to_top(cls, browser: Chrome):
         browser.execute_script("window.scrollTo(0, 0)")
-        cls.wait(1)
+        cls.wait(SCROLL_TOP_TIME)
 
     @classmethod
     def scroll_to_bottom(cls, browser: Chrome):
@@ -42,7 +43,7 @@ class BrowserInteractions:
         offset = 0
         while offset < scroll_height:
             browser.execute_script("window.scrollTo(0, %s);" % offset)
-            cls.wait(5)
+            cls.wait(SCROLL_BOTTOM_TIME)
             offset += browser.get_window_size()['height']*1/3
 
     @classmethod
@@ -62,7 +63,7 @@ class BrowserInteractions:
 
     @classmethod
     def screenshot(cls, browser: Chrome, file_name: str):
-        cls.wait(5)
+        cls.wait(SCREENSHOT_WAIT_TIME)
         browser.save_screenshot(file_name+".png")
 
     @staticmethod

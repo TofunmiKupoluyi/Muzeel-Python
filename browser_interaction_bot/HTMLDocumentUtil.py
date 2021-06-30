@@ -13,6 +13,7 @@ class HTMLDocumentUtil:
         self.global_xpath_map = {}
         self.dfs(self.doc.find_all("body")[0], "/html/body")
 
+    # TODO: Check what happens within iframes
     def dfs(self, root: Tag, xpath: str) -> None:
         if xpath != "/html/body":
             listeners = self.get_event_listeners_by_xpath(xpath)
@@ -50,6 +51,11 @@ class HTMLDocumentUtil:
                     else:
                         self.dfs(child, "{}/{}[{}]".format(xpath, tag_name, curr_tag_index))
 
+    #TODO: Add issues to functions with issues
+    """
+        Current issues: Chrome doesn't necessarily pick up all events. Certain events are attached to body that maybe should be attached to other elements.
+        Could try to add default interactable elements
+    """
     def get_event_listeners_by_xpath(self, xpath: str) -> list:
         try:
             xpath_to_object_id_query = {"expression" : "document.evaluate(\"{}\",document,null,XPathResult.ORDERED_NODE_SNAPSHOT_TYPE,null).snapshotItem(0)".format(xpath)}

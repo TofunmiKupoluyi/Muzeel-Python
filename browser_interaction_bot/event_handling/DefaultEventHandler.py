@@ -23,6 +23,10 @@ class DefaultEventHandler(EventHandler):
     def set_browser(self, browser: Chrome) -> None:
         self.browser = browser
 
+    """
+        Current issues: Certain events are not being triggered but do not throw exceptions. 
+        More thorough event triggering checks may be required.
+    """
     def trigger_individual_event(self, event: Event) -> None:
         xpath = event.xpath
         event_type = event.event_type
